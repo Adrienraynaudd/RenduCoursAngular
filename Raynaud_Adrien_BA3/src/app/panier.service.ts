@@ -2,8 +2,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { IArticle } from './article.interface';
-import { ArticleInfo } from './panier.interface';
-
+import { ArticleInfo, ArticleSansImage } from './panier.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,11 +17,24 @@ export class PanierService {
   getPanier(): BehaviorSubject<Map<string, ArticleInfo>> {
     return this.panierSubject;
   }
-
+  getPanierSansImage(): BehaviorSubject<Map<string, ArticleSansImage>> {
+    const panierSansImage = new Map<string, ArticleSansImage>();
+    this.panier.forEach((articleInfo: ArticleInfo) => {
+      const articleSansImage: ArticleSansImage = {
+        id: articleInfo.id,
+        quantity: articleInfo.quantity,
+        name: articleInfo.name,
+        price: articleInfo.price,
+        totalPrice: articleInfo.totalPrice,
+      };
+      panierSansImage.set(articleInfo.id, articleSansImage);
+    });
+    return new BehaviorSubject<Map<string, ArticleSansImage>>(panierSansImage);
+  }
   addPanier(article: IArticle, quantite: number): void {
     const articleId = article['Unique Entry ID'];
     const prixUnitaire = parseFloat(article.Buy.toString());
-    const prixTotal = quantite * prixUnitaire; 
+    const prixTotal = quantite * prixUnitaire;
     if (this.panier.has(articleId)) {
       const articleInfo = this.panier.get(articleId)!;
       this.panier.set(articleId, {
@@ -51,19 +63,19 @@ export class PanierService {
   modifyQuantite(articleId: string, event: any): void {
     const quantite: number = parseInt(event.target.value, 10);
     if (!isNaN(quantite)) {
-        if (this.panier.has(articleId)) {
-            const articleInfo = this.panier.get(articleId)!;
-            const prixUnitaire = articleInfo.price;
-            const prixTotal = quantite * prixUnitaire;
-            this.panier.set(articleId, {
-                ...articleInfo,
-                quantity: quantite,
-                totalPrice: prixTotal,
-            });
-            this.panierSubject.next(this.panier);
-        }
+      if (this.panier.has(articleId)) {
+        const articleInfo = this.panier.get(articleId)!;
+        const prixUnitaire = articleInfo.price;
+        const prixTotal = quantite * prixUnitaire;
+        this.panier.set(articleId, {
+          ...articleInfo,
+          quantity: quantite,
+          totalPrice: prixTotal,
+        });
+        this.panierSubject.next(this.panier);
+      }
     }
-}
+  }
 
   clearPanier(): void {
     this.panier.clear();
@@ -71,6 +83,8 @@ export class PanierService {
   }
   isInPanier(article: IArticle): boolean {
     const panier = this.getPanier().value;
-    return Array.from(panier.values()).some((item: { id: string }) => item.id === article['Unique Entry ID']);
+    return Array.from(panier.values()).some(
+      (item: { id: string }) => item.id === article['Unique Entry ID']
+    );
   }
 }

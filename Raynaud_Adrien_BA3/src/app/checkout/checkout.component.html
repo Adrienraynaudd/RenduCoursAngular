@@ -1,5 +1,5 @@
 <header role="banner" class="header">
-  <h1>Mon Site E-commerce</h1>
+  <h1>RigoloShop Payement</h1>
   <nav>
     <ul>
       <li>
@@ -19,3 +19,32 @@
   </nav>
 </header>
 <router-outlet></router-outlet>
+
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+  <label>Nom:</label>
+  <input type="text" formControlName="lastname" />
+
+  <label>Prénom:</label>
+  <input type="text" formControlName="firstname" />
+
+  <label>Adresse:</label>
+  <input type="text" formControlName="adress" />
+
+  <label>Code postal:</label>
+  <input type="text" formControlName="zipcode" />
+
+  <label>Ville:</label>
+  <input type="text" formControlName="city" />
+
+  <label>Numéro de carte:</label>
+  <input type="text" formControlName="card" />
+
+  <label>Date de validité de la carte:</label>
+  <input type="text" formControlName="cardDate" />
+
+  <button type="submit" [disabled]="checkoutForm.invalid">
+    Confirmer la commande
+  </button>
+  <button type="button" (click)="onCancel()">Annuler la commande</button>
+</form>

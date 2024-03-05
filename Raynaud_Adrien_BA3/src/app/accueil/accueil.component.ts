@@ -4,28 +4,39 @@ import { EcommerceService } from '../ecommerce.service';
 import { IArticle } from '../article.interface';
 import { CommonModule } from '@angular/common';
 import { PanierService } from '../panier.service';
+import { CheckoutComponent } from '../checkout/checkout.component';
+import { SuccessErrorMessageService } from '../message.service';
 
 @Component({
   selector: 'app-accueil',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    CommonModule,
+    CheckoutComponent,
+  ],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.css',
 })
 export class AccueilComponent implements OnInit {
+  successMessage: string | null = null;
   constructor(
     private ecommerceService: EcommerceService,
-    private panierService: PanierService
+    private panierService: PanierService,
+    private successErrorMessageService: SuccessErrorMessageService
   ) {}
-
   ngOnInit(): void {
     this.ecommerceService.getArticles().subscribe((data) => {
       this.articles = data;
     });
+    this.successErrorMessageService.successMessage$.subscribe((message) => {
+      this.successMessage = message;
+    });
   }
 
   articles: IArticle[] = [];
-
   addToCart(article: IArticle, event: Event): void {
     const tileElement = (event.target as HTMLElement).closest('.tile');
     if (tileElement) {
@@ -40,8 +51,8 @@ export class AccueilComponent implements OnInit {
           'Quantité:',
           quantity
         );
-        if(quantity > 0){
-        this.panierService.addPanier(article, quantity);
+        if (quantity > 0) {
+          this.panierService.addPanier(article, quantity);
         }
       } else {
         console.error('Input de quantité non trouvé.');
