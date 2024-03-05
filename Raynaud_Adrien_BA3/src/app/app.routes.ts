@@ -7,4 +7,5 @@ export const routes: Routes = [
   { path: '', component: AccueilComponent },
   { path: 'panier', component: PanierComponent },
   { path: 'checkout', component: CheckoutComponent },
+    { path: '**', redirectTo: '' }
 ];

@@ -11,19 +11,26 @@
   </nav>
 </header>
 <router-outlet></router-outlet>
+<div class="total-price">
+    <p>Prix total du panier: {{ getTotalPanierPrice() }}</p>
+  </div>
+  <button (click)="viderPanier()">Vider le panier</button>
+    <a
+    *ngIf="panierNotNull()"
+      routerLink="/checkout"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      [ngClass]="{'button-style': true}"
+      >Continuer</a
+    >
 <div class="tiles-container">
     <div *ngFor="let article of panier | keyvalue" class="tile">
       <img [src]="article.value.imageUrl" alt="{{ article.value.name }}" />
       <div class="details">
         <h3>{{ article.value.name }}</h3>
-        <input type="number" [value]="article.value.quantity" (change)="modifierQuantite(article.value,$event)">
+        <input type="number" [value]="article.value.quantity" min="1" (change)="modifierQuantite(article.value, $event)"oninput="this.value = Math.max(1, Math.abs(this.value))">
         <p>Prix total: {{ article.value.totalPrice }}</p>
         <button (click)="supprimerArticle(article.key)">Supprimer</button>
       </div>
     </div>
   </div>
-  
-  <div class="total-price">
-    <p>Prix total du panier: {{ getTotalPanierPrice() }}</p>
-  </div>
-  <button (click)="viderPanier()">Vider le panier</button>

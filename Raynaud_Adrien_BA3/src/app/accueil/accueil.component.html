@@ -20,9 +20,8 @@
     <img
       [src]="article['Closet Image']"
       alt="{{ article.Name }}"
-      (click)="addToCart(article, $event)"
     />
-    <div class="details" (click)="addToCart(article, $event)">
+    <div class="details" >
       <h3>{{ article.Name }}</h3>
       <p>Disponibilité: {{ article["Seasonal Availability"] }}</p>
       <p>Prix: {{ article.Buy }}</p>
@@ -34,8 +33,11 @@
           value="1"
           min="1"
           (click)="$event.stopPropagation()"
+          oninput="this.value = this.value === '0' ? '' : Math.abs(this.value)"
         />
       </div>
+      <button *ngIf="article.Buy != 'NFS'" (click)="addToCart(article, $event)">Ajouter au panier</button>
+      <button *ngIf="isInCart(article)" (click)="removeFromCart(article)">Supprimer du panier</button>
     </div>
   </div>
 </div>

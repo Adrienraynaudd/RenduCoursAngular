@@ -21,16 +21,16 @@ export class PanierComponent implements OnInit {
     });
   }
   modifierQuantite(article: ArticleInfo, quantite: any): void {
-    this.panierService.modifierQuantite(article.id, quantite);
+    this.panierService.modifyQuantite(article.id, quantite);
   }
 
   supprimerArticle(articleId: string): void {
-    this.panierService.supprimerDuPanier(articleId);
+    this.panierService.deletePanier(articleId);
   }
 
   viderPanier(): void {
     if (confirm('Êtes-vous sûr de vouloir vider le panier?')) {
-      this.panierService.viderPanier();
+      this.panierService.clearPanier();
     }
   }
 
@@ -41,4 +41,9 @@ export class PanierComponent implements OnInit {
     }
     return totalPrice;
   }
+  panierNotNull(): boolean {
+    this.panier.size > 0 ? true : false;
+    return this.panier.size > 0;
+  }
+  
 }

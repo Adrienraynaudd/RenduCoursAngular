@@ -40,12 +40,21 @@ export class AccueilComponent implements OnInit {
           'Quantité:',
           quantity
         );
-        this.panierService.ajouterAuPanier(article, quantity);
+        if(quantity > 0){
+        this.panierService.addPanier(article, quantity);
+        }
       } else {
         console.error('Input de quantité non trouvé.');
       }
     } else {
       console.error('Élément .tile parent non trouvé.');
     }
+  }
+  removeFromCart(article: IArticle): void {
+    this.panierService.deletePanier(article['Unique Entry ID']);
+  }
+
+  isInCart(article: IArticle): boolean {
+    return this.panierService.isInPanier(article);
   }
 }

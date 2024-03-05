@@ -19,7 +19,7 @@ export class PanierService {
     return this.panierSubject;
   }
 
-  ajouterAuPanier(article: IArticle, quantite: number): void {
+  addPanier(article: IArticle, quantite: number): void {
     const articleId = article['Unique Entry ID'];
     const prixUnitaire = parseFloat(article.Buy.toString());
     const prixTotal = quantite * prixUnitaire; 
@@ -43,12 +43,12 @@ export class PanierService {
     this.panierSubject.next(this.panier);
   }
 
-  supprimerDuPanier(articleId: string): void {
+  deletePanier(articleId: string): void {
     this.panier.delete(articleId);
     this.panierSubject.next(this.panier);
   }
 
-  modifierQuantite(articleId: string, event: any): void {
+  modifyQuantite(articleId: string, event: any): void {
     const quantite: number = parseInt(event.target.value, 10);
     if (!isNaN(quantite)) {
         if (this.panier.has(articleId)) {
@@ -65,8 +65,12 @@ export class PanierService {
     }
 }
 
-  viderPanier(): void {
+  clearPanier(): void {
     this.panier.clear();
     this.panierSubject.next(this.panier);
+  }
+  isInPanier(article: IArticle): boolean {
+    const panier = this.getPanier().value;
+    return Array.from(panier.values()).some((item: { id: string }) => item.id === article['Unique Entry ID']);
   }
 }
