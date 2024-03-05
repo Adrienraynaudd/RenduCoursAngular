@@ -1,0 +1,41 @@
+<header role="banner" class="header">
+  <h1>Mon Site E-commerce</h1>
+  <nav>
+    <ul>
+      <li>
+        <a
+          routerLink="/panier"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          >Panier</a
+        >
+      </li>
+    </ul>
+  </nav>
+</header>
+<router-outlet></router-outlet>
+
+<div class="tiles-container">
+  <div *ngFor="let article of articles" class="tile">
+    <img
+      [src]="article['Closet Image']"
+      alt="{{ article.Name }}"
+      (click)="addToCart(article, $event)"
+    />
+    <div class="details" (click)="addToCart(article, $event)">
+      <h3>{{ article.Name }}</h3>
+      <p>Disponibilité: {{ article["Seasonal Availability"] }}</p>
+      <p>Prix: {{ article.Buy }}</p>
+      <div class="quantity">
+        <label for="quantity">Quantité:</label>
+        <input
+          type="number"
+          id="quantity{{ article.Name }}"
+          value="1"
+          min="1"
+          (click)="$event.stopPropagation()"
+        />
+      </div>
+    </div>
+  </div>
+</div>
